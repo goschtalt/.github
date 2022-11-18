@@ -59,6 +59,7 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
           cache: true
+          cache-dependency-path: ${{ inputs.working-directory }}
 
       - name: Build & Test (no race)
         if: |
@@ -91,6 +92,7 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
+          cache-dependency-path: ${{ inputs.working-directory }}
 
       - name: goschtalt -- Coverage
         working-directory: ${{ inputs.working-directory }}
@@ -121,6 +123,7 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
+          cache-dependency-path: ${{ inputs.working-directory }}
 
       - name: Run gofmt
         working-directory: ${{ inputs.working-directory }}
@@ -146,6 +149,7 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
+          cache-dependency-path: ${{ inputs.working-directory }}
 
       - name: Lint New Issues Only
         if: github.event_name == 'pull_request'
@@ -186,6 +190,7 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
+          cache-dependency-path: ${{ inputs.working-directory }}
 
       - name: Setup licensed
         uses: jonabc/setup-licensed@v1
@@ -268,6 +273,7 @@ jobs:
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
+          cache-dependency-path: ${{ inputs.working-directory }}
 
       - name: Fetch shared .gorelease.yml file
         working-directory: ${{ inputs.working-directory }}
