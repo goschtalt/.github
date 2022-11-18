@@ -20,7 +20,7 @@ permissions:
   security-events: write
 
 jobs:
-  ci:
+  codeql:
     uses: goschtalt/.github/.github/workflows/codeql.yml@main
     with:
       working-directory: testing
