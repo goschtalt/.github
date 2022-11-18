@@ -232,29 +232,6 @@ jobs:
           curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST -F "repo=github.com/${{ github.repository }}" https://goreportcard.com/checks
 
 
-  codeql:
-    name: Analyze via CodeQL
-    runs-on: [ ubuntu-latest ]
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: 'go'
-
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
-
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-
-
   release:
     name: Release
     needs: [ test, style, lint, reuse, license ]
