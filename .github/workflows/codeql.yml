@@ -1,0 +1,40 @@
+# SPDX-FileCopyrightText: 2022 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
+# SPDX-License-Identifier: Apache-2.0
+---
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+
+      # General or common inputs.
+      working-directory:
+        description: 'The working directory for this project.'
+        required: false
+        type: string
+        default: .
+
+codeql:
+    name: Analyze via CodeQL
+    runs-on: [ ubuntu-latest ]
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        source-root: ${{ working-directory }}
+        languages: 'go'
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      with:
+        working-directory: ${{ working-directory }}
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
