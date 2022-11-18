@@ -278,7 +278,7 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: |
           curl -L -s -f -H 'Accept: application/vnd.github.v3.raw' \
-            https://api.github.com/repos/goschtalt/.github/contents/.gorelease.yml?ref=main \
+            https://api.github.com/repos/goschtalt/.github/contents/.goreleaser.yml?ref=main \
             -o .gorelease.yml
 
       # To let testing take us as far as possible, only filter this step out.
