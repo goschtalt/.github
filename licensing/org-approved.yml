@@ -1,0 +1,11 @@
+# Please keep alphabetized 
+allowed:
+  - mit
+  - apache-2.0
+  - bsd-3-clause
+
+# Please keep alphabetized & on the far right, call out the specific license(s)
+# that apply.  Use the spdx license name for consistency.
+reviewed:
+  go:
+    - github.com/magiconair/properties  # BSD-2-Clause license

@@ -20,12 +20,19 @@ on:
         type: boolean
         default: true
 
+      working-directory:
+        description: 'The working directory for this project.'
+        required: false
+        type: string
+        default: .
+
       # Lint focused
       linter-timeout:
         description: 'The timeout to pass on to the linter.'
         required: false
         type: string
         default: '5m'
+
       linter-version:
         description: 'The working directory for this project.'
         required: false
@@ -56,6 +63,7 @@ jobs:
       - name: Build & Test (no race)
         if: |
           matrix.os == 'windows-latest'
+        working-directory: ${{ inputs.working-directory }}
         run: |
           go get
           go build ./...
@@ -64,6 +72,7 @@ jobs:
       - name: Build & Test (with race)
         if: |
           matrix.os != 'windows-latest'
+        working-directory: ${{ inputs.working-directory }}
         run: |
           go build ./...
           go test -race ./...
@@ -84,6 +93,7 @@ jobs:
           cache: true
 
       - name: goschtalt -- Coverage
+        working-directory: ${{ inputs.working-directory }}
         run: |
           go get
           go test -race -covermode=atomic -coverprofile=coverage.out ./...
@@ -93,6 +103,7 @@ jobs:
       - name: Send results to codecov.io
         uses: codecov/codecov-action@v3
         with:
+          directory:  ${{ inputs.working-directory }}
           flags: unittests
           files: >-
             ./coverage.out
@@ -112,6 +123,7 @@ jobs:
           cache: true
 
       - name: Run gofmt
+        working-directory: ${{ inputs.working-directory }}
         shell: bash
         run: |
           gofmt -d $(find . -path ./vendor -prune -o -name '*.go' -print) > fmt.patch
@@ -139,15 +151,17 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: golangci/golangci-lint-action@v3
         with:
-          version:        ${{ inputs.linter-version }}
-          args: --timeout ${{ inputs.linter-timeout }}
+          working-directory: ${{ inputs.working-directory }}
+          version:           ${{ inputs.linter-version }}
+          args:    --timeout ${{ inputs.linter-timeout }}
 
       - name: Lint Entire Repo
         if: github.event_name != 'pull_request'
         uses: golangci/golangci-lint-action@v3
         with:
-          version:        ${{ inputs.linter-version }}
-          args: --timeout ${{ inputs.linter-timeout }}
+          working-directory: ${{ inputs.working-directory }}
+          version:           ${{ inputs.linter-version }}
+          args:    --timeout ${{ inputs.linter-timeout }}
 
 
   reuse:
@@ -179,6 +193,7 @@ jobs:
          version: 3.x
 
       - name: Fetch Org Approved Licenses & merge to local
+        working-directory: ${{ inputs.working-directory }}
         run: |
           if [ -f .licensed.yml ]; then
             echo "Please submit these licenses to the shared list..."
@@ -200,11 +215,13 @@ jobs:
           yq eval-all '. as $item ireduce ({}; . *+  $item)' .licensed_local.yml .licensed_common.yml > .licensed.yml
 
       - name: Run licensed cache
+        working-directory: ${{ inputs.working-directory }}
         run: |
           go get ./...
           licensed cache
 
       - name: Validate compliance
+        working-directory: ${{ inputs.working-directory }}
         run: |
           licensed status -f yaml > licensing.yml || true
           yq eval 'del(.apps[].sources[].dependencies[] | select(.allowed == "true") )' licensing.yml > disallowed.yml
@@ -216,8 +233,8 @@ jobs:
         with:
           name: licensing
           path: |
-            licensing.yml
-            disallowed.yml
+            ${{ inputs.working-directory }}/licensing.yml
+            ${{ inputs.working-directory }}/disallowed.yml
 
 
   goreportcard:
@@ -253,6 +270,7 @@ jobs:
           cache: true
 
       - name: Fetch shared .gorelease.yml file
+        working-directory: ${{ inputs.working-directory }}
         run: |
           curl -L -s -f -H 'Accept: application/vnd.github.v3.raw' \
             https://api.github.com/repos/goschtalt/.github/contents/.gorelease.yml?ref=main \
@@ -261,7 +279,8 @@ jobs:
       - uses: goreleaser/goreleaser-action@v3
         with:
           distribution: goreleaser
-          version: latest
-          args: release --rm-dist
+          workdir:      ${{ inputs.working-directory }}
+          version:      latest
+          args:         release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
