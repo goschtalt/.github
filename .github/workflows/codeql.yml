@@ -29,13 +29,13 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        source-root: ${{ working-directory }}
+        source-root: ${{ inputs.working-directory }}
         languages: 'go'
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
       with:
-        working-directory: ${{ working-directory }}
+        working-directory: ${{ inputs.working-directory }}
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
