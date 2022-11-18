@@ -14,6 +14,8 @@ name: 'Dependabot auto approvals'
 on:
   workflow_call:
     inputs:
+
+      # General or common inputs.
       max-semver:
         description: "The maximum semver level to approve. [options: minor, patch]"
         required: false
