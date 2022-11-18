@@ -1,0 +1,290 @@
+# SPDX-FileCopyrightText: 2022 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
+# SPDX-License-Identifier: Apache-2.0
+---
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+
+      # General or common inputs.
+      go-version:
+        description: "The go version to use.  Example: '1.18.x'"
+        required: false
+        type: string
+        default: '^1.19.x'
+
+      go-version-latest:
+        description: "Will always use the latest version of go available."
+        required: false
+        type: boolean
+        default: true
+
+      # Lint focused
+      linter-timeout:
+        description: 'The timeout to pass on to the linter.'
+        required: false
+        type: string
+        default: '5m'
+      linter-version:
+        description: 'The working directory for this project.'
+        required: false
+        type: string
+        default: 'v1.48'
+
+
+jobs:
+  test:
+    needs: [ style, lint, reuse ]
+    strategy:
+      matrix:
+        os: [ 'ubuntu-latest', 'macos-latest', 'windows-latest' ]
+        go: ['1.18', '1.19']
+    runs-on: ${{ matrix.os }}
+    name: Build & Test
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup go version
+        uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f
+        with:
+          go-version: ${{ matrix.go }}
+          cache: true
+
+      - name: Build & Test (no race)
+        if: |
+          matrix.os == 'windows-latest'
+        run: |
+          go get
+          go build ./...
+          go test ./...
+
+      - name: Build & Test (with race)
+        if: |
+          matrix.os != 'windows-latest'
+        run: |
+          go build ./...
+          go test -race ./...
+
+
+  coverage:
+    runs-on: [ 'ubuntu-latest' ]
+    name: Build & Test & Report Coverage
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup go version
+        uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: true
+
+      - name: goschtalt -- Coverage
+        run: |
+          go get
+          go test -race -covermode=atomic -coverprofile=coverage.out ./...
+
+      # Upload the results of code coverage once
+
+      - name: Send results to codecov.io
+        uses: codecov/codecov-action@v3
+        with:
+          flags: unittests
+          files: >-
+            ./coverage.out
+
+
+  style:
+    name: Check code style
+    runs-on: [ 'ubuntu-latest' ]
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup go version
+        uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: true
+
+      - name: Run gofmt
+        shell: bash
+        run: |
+          gofmt -d $(find . -path ./vendor -prune -o -name '*.go' -print) > fmt.patch
+          # Error check & fail if any format mismatches are detected.
+          if [ $(wc fmt.patch | awk '{print $1}') -ne 0 ]; then
+            cat fmt.patch;
+            exit 1;
+          fi
+
+
+  lint:
+    name: Golint Checking
+    runs-on: [ 'ubuntu-latest' ]
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup go version
+        uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: true
+
+      - name: Lint New Issues Only
+        if: github.event_name == 'pull_request'
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version:        ${{ inputs.linter-version }}
+          args: --timeout ${{ inputs.linter-timeout }}
+
+      - name: Lint Entire Repo
+        if: github.event_name != 'pull_request'
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version:        ${{ inputs.linter-version }}
+          args: --timeout ${{ inputs.linter-timeout }}
+
+
+  reuse:
+    name: REUSE Checking
+    runs-on: [ 'ubuntu-latest' ]
+    steps: 
+    - uses: actions/checkout@v3
+
+    - name: REUSE Compliance Check
+      uses: fsfe/reuse-action@v1
+
+
+  license:
+    name: License Checking
+    runs-on: [ 'ubuntu-latest' ]
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Setup go version
+        uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: true
+
+      - name: Setup licensed
+        uses: jonabc/setup-licensed@v1
+        with:
+         version: 3.x
+
+      - name: Fetch Org Approved Licenses & merge to local
+        run: |
+          if [ -f .licensed.yml ]; then
+            echo "Please submit these licenses to the shared list..."
+            mv .licensed.yml .licensed_local.yml
+          fi
+          if [ -f .licensed.yaml ]; then
+            echo "Please submit these licenses to the shared list..."
+            mv .licensed.yaml .licensed_local.yml
+          fi
+          if [ -f .licensed.json ]; then
+            echo "JSON is not supported.  Please use .licensed.yml or submit a patch."
+          fi
+          if [ ! -f .licensed_local.yml ]; then
+            touch .licensed_local.yml
+          fi
+          curl -L -s -f -H 'Accept: application/vnd.github.v3.raw' \
+            https://api.github.com/repos/goschtalt/.github/contents/licensing/org-approved.yml?ref=main \
+            -o .licensed_common.yml
+          yq eval-all '. as $item ireduce ({}; . *+  $item)' .licensed_local.yml .licensed_common.yml > .licensed.yml
+
+      - name: Run licensed cache
+        run: |
+          go get ./...
+          licensed cache
+
+      - name: Validate compliance
+        run: |
+          licensed status -f yaml > licensing.yml || true
+          yq eval 'del(.apps[].sources[].dependencies[] | select(.allowed == "true") )' licensing.yml > disallowed.yml
+          licensed status
+
+      - name: Archive license results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: licensing
+          path: |
+            licensing.yml
+            disallowed.yml
+
+
+  goreportcard:
+    name: Update goreportcard.com
+    runs-on: [ 'ubuntu-latest' ]
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: 'Update the results on goreportcard.com'
+        run: |
+          curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST -F "repo=github.com/${{ github.repository }}" https://goreportcard.com/checks
+
+
+  codeql:
+    name: Analyze via CodeQL
+    runs-on: [ ubuntu-latest ]
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: 'go'
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+
+  release:
+    name: Release
+    needs: [ test, style, lint, reuse, license ]
+    if: success() && startsWith(github.ref, 'refs/tags/')
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Fetch tags for TagBody, TagSubject and TagContents
+        run: git fetch --force --tags
+
+      - name: Setup go version
+        uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f
+        with:
+          go-version: ${{ inputs.go-version }}
+          cache: true
+
+      - name: Fetch shared .gorelease.yml file
+        run: |
+          curl -L -s -f -H 'Accept: application/vnd.github.v3.raw' \
+            https://api.github.com/repos/goschtalt/.github/contents/.gorelease.yml?ref=main \
+            -o .gorelease.yml
+
+      - uses: goreleaser/goreleaser-action@v3
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
