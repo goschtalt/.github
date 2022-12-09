@@ -23,10 +23,10 @@ Files: licensing/org-approved.yml
 Copyright: SPDX-FileCopyrightText: 2022 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
 License: Apache-2.0
 
-Files: testing/go.mod
+Files: testing/go.mod testing/go.sum
 Copyright: SPDX-FileCopyrightText: 2022 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
 License: Apache-2.0
 
-Files: testing/go.sum
+Files: .github/codecov.yml .github/dependabot.yml
 Copyright: SPDX-FileCopyrightText: 2022 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
 License: Apache-2.0
