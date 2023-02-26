@@ -39,6 +39,19 @@ on:
         type: string
         default: 'v1.48'
 
+      # Release focused
+      release-custom-file:
+        description: "If the project needs a custom release file, use that instead."
+        required: false
+        type: boolean
+        default: false
+
+      release-project-name:
+        description: "The project name / binary name to use if not the repo name."
+        required: false
+        type: string
+        default: ''
+
 
 jobs:
   test:
@@ -274,12 +287,49 @@ jobs:
           cache: true
           cache-dependency-path: ${{ inputs.working-directory }}
 
-      - name: Fetch shared .gorelease.yml file
-        working-directory: ${{ inputs.working-directory }}
+      - name: Generate the .goreleaser.yml file
+        if: inputs.release-custom-file == false
+        shell: bash
         run: |
-          curl -L -s -f -H 'Accept: application/vnd.github.v3.raw' \
-            https://api.github.com/repos/goschtalt/.github/contents/.goreleaser.yml?ref=main \
-            -o .goreleaser.yml
+          project_name=${{ inputs.release-project-name }}
+          if [[ $project_name == "" ]]; then
+            project_name=$(echo ${{ github.repository }} | sed 's:.*/::')
+          fi
+
+          echo "---" > .goreleaser.yml
+          gecho() { echo "$1" >> .goreleaser.yml ; }
+          gecho "project_name: ${project_name}"
+          gecho ""
+          gecho "builds:"
+          gecho "  - skip: true"
+          gecho ""
+          gecho "changelog:"
+          gecho "  use: github"
+          gecho "  sort: asc"
+          gecho "  filters:"
+          gecho "    exclude:"
+          gecho "    - '^test:'"
+          gecho "    - '^chore'"
+          gecho "    - 'merge conflict'"
+          gecho "    - Merge pull request"
+          gecho "    - Merge remote-tracking branch"
+          gecho "    - Merge branch"
+          gecho "    - go mod tidy"
+          gecho "  groups:"
+          gecho "    - title: 'Dependency updates'"
+          gecho "      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'"
+          gecho "      order: 300"
+          gecho "    - title: 'New Features'"
+          gecho "      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'"
+          gecho "      order: 100"
+          gecho "    - title: 'Bug fixes'"
+          gecho "      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'"
+          gecho "      order: 200"
+          gecho "    - title: 'Documentation updates'"
+          gecho "      regexp: ^.*?doc(\([[:word:]]+\))??!?:.+$"
+          gecho "      order: 400"
+          gecho "    - title: Other work"
+          gecho "      order: 9999"
 
       # To let testing take us as far as possible, only filter this step out.
       - uses: goreleaser/goreleaser-action@v4
