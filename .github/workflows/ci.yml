@@ -37,7 +37,7 @@ on:
         description: 'The working directory for this project.'
         required: false
         type: string
-        default: 'v1.48'
+        default: 'latest'
 
       # Release focused
       release-custom-file:
