@@ -205,10 +205,16 @@ jobs:
           cache: true
           cache-dependency-path: ${{ inputs.working-directory }}
 
+      # setup ruby environment before running jonabc/setup-licensed
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby
+
       - name: Setup licensed
         uses: jonabc/setup-licensed@v1
         with:
-         version: 3.x
+         version: 4.x
+         github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Org Approved Licenses & merge to local
         working-directory: ${{ inputs.working-directory }}
