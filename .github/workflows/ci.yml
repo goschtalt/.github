@@ -346,6 +346,6 @@ jobs:
           distribution: goreleaser
           workdir:      ${{ inputs.working-directory }}
           version:      latest
-          args:         release --rm-dist
+          args:         release --clean --skip-validate
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
