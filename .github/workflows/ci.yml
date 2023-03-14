@@ -65,10 +65,10 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Setup go version
-        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version: ${{ matrix.go }}
           cache: true
@@ -98,10 +98,10 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Setup go version
-        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
@@ -116,7 +116,7 @@ jobs:
       # Upload the results of code coverage once
 
       - name: Send results to codecov.io
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1
         with:
           directory:  ${{ inputs.working-directory }}
           flags: unittests
@@ -129,10 +129,10 @@ jobs:
     runs-on: [ 'ubuntu-latest' ]
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Setup go version
-        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
@@ -155,10 +155,10 @@ jobs:
     runs-on: [ 'ubuntu-latest' ]
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Setup go version
-        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
@@ -166,7 +166,7 @@ jobs:
 
       - name: Lint New Issues Only
         if: github.event_name == 'pull_request'
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5 # v3.4.0
         with:
           working-directory: ${{ inputs.working-directory }}
           version:           ${{ inputs.linter-version }}
@@ -174,7 +174,7 @@ jobs:
 
       - name: Lint Entire Repo
         if: github.event_name != 'pull_request'
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5 # v3.4.0
         with:
           working-directory: ${{ inputs.working-directory }}
           version:           ${{ inputs.linter-version }}
@@ -185,10 +185,10 @@ jobs:
     name: REUSE Checking
     runs-on: [ 'ubuntu-latest' ]
     steps: 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
     - name: REUSE Compliance Check
-      uses: fsfe/reuse-action@v1
+      uses: fsfe/reuse-action@e7a435374d26d54b324fa6699d8eafb076340dfd # v1.2.0
 
 
   license:
@@ -196,25 +196,27 @@ jobs:
     runs-on: [ 'ubuntu-latest' ]
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: Setup go version
-        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
           cache-dependency-path: ${{ inputs.working-directory }}
 
       # setup ruby environment before running jonabc/setup-licensed
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@9669f3ee51dc3f4eda8447ab696b3ab19a90d14b # v1.144.0
         with:
           ruby-version: ruby
 
       - name: Setup licensed
-        uses: jonabc/setup-licensed@v1
+        uses: jonabc/setup-licensed@d6b3a6f7058c2b40c06d205e13e15c2418977566 # v1.1.4
         with:
          version: 4.x
-         github_token: ${{ secrets.GITHUB_TOKEN }}
+         dependabot_skip:    true
+         cleanup_on_success: true
+         github_token:       ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Org Approved Licenses & merge to local
         working-directory: ${{ inputs.working-directory }}
@@ -253,7 +255,7 @@ jobs:
 
       - name: Archive license results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: licensing
           path: |
@@ -266,7 +268,7 @@ jobs:
     runs-on: [ 'ubuntu-latest' ]
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
       - name: 'Update the results on goreportcard.com'
         run: |
@@ -279,7 +281,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           fetch-depth: 0
 
@@ -287,7 +289,7 @@ jobs:
         run: git fetch --force --tags
 
       - name: Setup go version
-        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568 # v3.5.0
         with:
           go-version: ${{ inputs.go-version }}
           cache: true
@@ -338,7 +340,7 @@ jobs:
           gecho "      order: 9999"
 
       # To let testing take us as far as possible, only filter this step out.
-      - uses: goreleaser/goreleaser-action@v4
+      - uses: goreleaser/goreleaser-action@f82d6c1c344bcacabba2c841718984797f664a6b # v4.2.0
         if: success() && startsWith(github.ref, 'refs/tags/')
         with:
           distribution: goreleaser
