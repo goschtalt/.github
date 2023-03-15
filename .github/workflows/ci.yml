@@ -79,7 +79,7 @@ jobs:
           matrix.os == 'windows-latest'
         working-directory: ${{ inputs.working-directory }}
         run: |
-          go get
+          go get ./...
           go build ./...
           go test ./...
 
@@ -110,7 +110,7 @@ jobs:
       - name: goschtalt -- Coverage
         working-directory: ${{ inputs.working-directory }}
         run: |
-          go get
+          go get ./...
           go test -race -covermode=atomic -coverprofile=coverage.out ./...
 
       # Upload the results of code coverage once
