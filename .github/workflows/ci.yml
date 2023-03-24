@@ -79,16 +79,16 @@ jobs:
           matrix.os == 'windows-latest'
         working-directory: ${{ inputs.working-directory }}
         run: |
-          go get ./...
+          go get   ./...
           go build ./...
-          go test ./...
+          go test  ./...
 
       - name: Build & Test (with race)
         if: |
           matrix.os != 'windows-latest'
         working-directory: ${{ inputs.working-directory }}
         run: |
-          go build ./...
+          go build      ./...
           go test -race ./...
 
 
@@ -164,14 +164,6 @@ jobs:
           cache: true
           cache-dependency-path: ${{ inputs.working-directory }}
 
-      - name: Lint New Issues Only
-        if: github.event_name == 'pull_request'
-        uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5 # v3.4.0
-        with:
-          working-directory: ${{ inputs.working-directory }}
-          version:           ${{ inputs.linter-version }}
-          args:    --timeout ${{ inputs.linter-timeout }}
-
       - name: Lint Entire Repo
         if: github.event_name != 'pull_request'
         uses: golangci/golangci-lint-action@08e2f20817b15149a52b5b3ebe7de50aff2ba8c5 # v3.4.0
@@ -236,6 +228,9 @@ jobs:
             touch .licensed_local.yml
           fi
           curl -L -s -f -H 'Accept: application/vnd.github.v3.raw' \
+            --max-time    10 \
+            --retry       5 \
+            --retry-delay 1 \
             https://api.github.com/repos/goschtalt/.github/contents/licensing/org-approved.yml?ref=main \
             -o .licensed_common.yml
           yq eval-all '. as $item ireduce ({}; . *+  $item)' .licensed_local.yml .licensed_common.yml > .licensed.yml
@@ -272,7 +267,12 @@ jobs:
 
       - name: 'Update the results on goreportcard.com'
         run: |
-          curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" -X POST -F "repo=github.com/${{ github.repository }}" https://goreportcard.com/checks
+          curl -s -o /dev/null -L \
+            --max-time    10 \
+            --retry       5 \
+            --retry-delay 1 \
+            -w "HTTP Status: %{http_code}\n" \
+            -X POST -F "repo=github.com/${{ github.repository }}" https://goreportcard.com/checks
 
 
   release:
@@ -348,4 +348,5 @@ jobs:
           version:      latest
           args:         release --clean --skip-validate
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GORELEASER_CURRENT_TAG: ${{ github.ref_name }}
+          GITHUB_TOKEN:           ${{ secrets.GITHUB_TOKEN }}
