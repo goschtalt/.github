@@ -3,6 +3,11 @@
     "description": "Goschtalt Dependabot Approver starter workflow.",
     "iconName": "dependabot",
     "categories": [
+        "Automation",
         "dependency-management"
+    ],
+    "filePatterns": [
+        ".*\\.yml$",
+        ".*\\.md$"
     ]
 }
