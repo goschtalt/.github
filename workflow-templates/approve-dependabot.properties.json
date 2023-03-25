@@ -6,7 +6,6 @@
         "dependency-management"
     ],
     "filePatterns": [
-        ".github/dependabot.yml",
         ".*\\.md$"
     ]
 }
