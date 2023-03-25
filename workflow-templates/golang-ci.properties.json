@@ -1,0 +1,13 @@
+{
+    "name": "Goschtalt Golang Workflow",
+    "description": "Goschtalt Golang CI starter workflow.",
+    "iconName": "go",
+    "categories": [
+        "Continuous integration",
+        "Go"
+    ],
+    "filePatterns": [
+        ".*\\.go$",
+        ".*\\.md$"
+    ]
+}

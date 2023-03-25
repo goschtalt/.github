@@ -1,0 +1,25 @@
+# SPDX-FileCopyrightText: 2022-2023 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
+# SPDX-License-Identifier: Apache-2.0
+---
+name: CI
+
+on:
+  push:
+    branches:
+      - $default-branch
+    paths-ignore:
+      - '**.md'
+      - .gitignore
+    tags:
+      - 'v*'
+
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ci:
+    uses: goschtalt/.github/.github/workflows/ci.yml@b3178a73d3a293d7ec99607a1bd0ad46c9d3e552 # v1.0.5
+    secrets: inherit

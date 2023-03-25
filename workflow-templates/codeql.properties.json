@@ -1,0 +1,13 @@
+{
+    "name": "Goschtalt CodeQL Workflow",
+    "description": "Goschtalt CodeQL starter workflow.",
+    "iconName": "codeql",
+    "categories": [
+        "Code quality",
+        "Go"
+    ],
+    "filePatterns": [
+        ".*\\.go$",
+        ".*\\.md$"
+    ]
+}

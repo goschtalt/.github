@@ -1,0 +1,12 @@
+{
+    "name": "Goschtalt Dependabot Approver",
+    "description": "Goschtalt Dependabot Approver starter workflow.",
+    "iconName": "dependabot",
+    "categories": [
+        "dependency-management"
+    ],
+    "filePatterns": [
+        ".*\\.yml$",
+        ".*\\.md$"
+    ]
+}

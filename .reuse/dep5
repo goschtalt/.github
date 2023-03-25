@@ -30,3 +30,20 @@ License: Apache-2.0
 Files: .github/codecov.yml .github/dependabot.yml
 Copyright: SPDX-FileCopyrightText: 2022 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
 License: Apache-2.0
+
+Files: workflow-templates/codeql.svg
+Copyright: SPDX-FileCopyrightText: 2023 svgrepo.com
+License: MIT
+
+Files: workflow-templates/dependabot.svg
+Copyright: SPDX-FileCopyrightText: 2023 svgrepo.com
+License: MIT
+
+Files: workflow-templates/go.svg
+Copyright: SPDX-FileCopyrightText: 2020 Github.com
+License: MIT
+
+Files: workflow-templates/*.json
+Copyright: SPDX-FileCopyrightText: 2022 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
+License: Apache-2.0
+
