@@ -3,7 +3,8 @@
     "description": "Goschtalt CodeQL starter workflow.",
     "iconName": "codeql",
     "categories": [
-        "Code quality"
+        "Code quality",
+        "code-scanning"
     ],
     "filePatterns": [
         ".*\\.go$",
