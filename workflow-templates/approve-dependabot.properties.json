@@ -4,8 +4,5 @@
     "iconName": "dependabot",
     "categories": [
         "dependency-management"
-    ],
-    "filePatterns": [
-        ".*\\.md$"
     ]
 }
