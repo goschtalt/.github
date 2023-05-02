@@ -350,3 +350,20 @@ jobs:
         env:
           GORELEASER_CURRENT_TAG: ${{ github.ref_name }}
           GITHUB_TOKEN:           ${{ secrets.GITHUB_TOKEN }}
+
+  all_passed:
+    needs: [ coverage, license, lint, release, reuse, style, test ]
+    if: always()
+    name: All checks passed check.
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Fail unless required checks pass
+        if: |
+          needs.coverage.result == 'failure' ||
+          needs.license.result  == 'failure' ||
+          needs.lint.result     == 'failure' ||
+          needs.release.result  == 'failure' ||
+          needs.reuse.result    == 'failure' ||
+          needs.style.result    == 'failure'
+        run: exit 1
+      - run: 'echo "✅ All required jobs have passed!"'
