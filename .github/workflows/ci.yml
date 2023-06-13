@@ -223,10 +223,8 @@ jobs:
       - name: Setup licensed
         uses: jonabc/setup-licensed@d6b3a6f7058c2b40c06d205e13e15c2418977566 # v1.1.4
         with:
-         version: 4.x
-         dependabot_skip:    true
-         cleanup_on_success: true
-         github_token:       ${{ secrets.GITHUB_TOKEN }}
+         version:       4.x
+         github_token:  ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch Org Approved Licenses & merge to local
         working-directory: ${{ inputs.working-directory }}
