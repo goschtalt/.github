@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   codeql:
-    uses: goschtalt/.github/.github/workflows/codeql.yml@main
+    uses: ./.github/workflows/codeql.yml
     with:
       working-directory: testing
     secrets: inherit

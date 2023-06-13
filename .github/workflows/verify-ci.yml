@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   ci:
-    uses: goschtalt/.github/.github/workflows/ci.yml@main
+    uses: ./.github/workflows/ci.yml
     with:
       working-directory: testing
     secrets: inherit

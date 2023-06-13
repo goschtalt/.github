@@ -192,10 +192,10 @@ jobs:
       - name: Dump context
         uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
 
-    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
-    - name: REUSE Compliance Check
-      uses: fsfe/reuse-action@e7a435374d26d54b324fa6699d8eafb076340dfd # v1.2.0
+      - name: REUSE Compliance Check
+        uses: fsfe/reuse-action@e7a435374d26d54b324fa6699d8eafb076340dfd # v1.2.0
 
 
   license:
