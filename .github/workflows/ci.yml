@@ -64,6 +64,9 @@ jobs:
     name: Build & Test
 
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Checkout the code
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
@@ -97,6 +100,9 @@ jobs:
     name: Build & Test & Report Coverage
 
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Checkout the code
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
@@ -128,6 +134,9 @@ jobs:
     name: Check code style
     runs-on: [ 'ubuntu-latest' ]
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Checkout the code
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
@@ -154,6 +163,9 @@ jobs:
     name: Golint Checking
     runs-on: [ 'ubuntu-latest' ]
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Checkout the code
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
@@ -177,6 +189,9 @@ jobs:
     name: REUSE Checking
     runs-on: [ 'ubuntu-latest' ]
     steps: 
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
     - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
     - name: REUSE Compliance Check
@@ -187,6 +202,9 @@ jobs:
     name: License Checking
     runs-on: [ 'ubuntu-latest' ]
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Checkout the code
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
@@ -262,6 +280,9 @@ jobs:
     name: Update goreportcard.com
     runs-on: [ 'ubuntu-latest' ]
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Checkout the code
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
 
@@ -280,6 +301,9 @@ jobs:
     needs: [ test, style, lint, reuse, license ]
     runs-on: [ ubuntu-latest ]
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Checkout the code
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
@@ -357,6 +381,9 @@ jobs:
     name: All checks passed check.
     runs-on: [ubuntu-latest]
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       - name: Fail unless required checks pass
         if: |
           needs.coverage.result == 'failure' ||

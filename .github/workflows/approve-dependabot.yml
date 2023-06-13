@@ -29,6 +29,9 @@ jobs:
     # PRs but also ensures that it only does work for Dependabot PRs.
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
       # This first step will fail if there's no metadata and so the approval
       # will not occur.
       - name: Dependabot metadata

@@ -23,6 +23,9 @@ jobs:
       contents: read
       security-events: write
     steps:
+      - name: Dump context
+        uses: crazy-max/ghaction-dump-context@158bbf4d6158a44a7e13f76295dc55a69e481a6e # v2.0.0
+
     - name: Checkout repository
       uses: actions/checkout@v3
 
