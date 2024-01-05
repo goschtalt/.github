@@ -22,6 +22,8 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
+          patchList: fix, bugfix, perf, refactor, test, tests, chore
+          noVersionBumpBehavior: silent
 
       - name: Create Release
         uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
