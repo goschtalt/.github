@@ -28,7 +28,7 @@ jobs:
 
       - name: Create Release
         if: |
-          steps.semver.outputs.current != steps.semver.outputs.next
+          steps.semver.outputs.next != ''
         uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
         with:
           name:   ${{ steps.semver.outputs.next }}
