@@ -1,0 +1,32 @@
+# SPDX-FileCopyrightText: 2024 Weston Schmidt <weston_schmidt@alumni.purdue.edu>
+# SPDX-License-Identifier: Apache-2.0
+---
+name: Auto Releaser
+
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@fc64c94a8d52cc1da776770e72a1a053d5e83fd5 # v1.5.2
+        with:
+          token: ${{ github.token }}
+          branch: main
+
+      - name: Create Release
+        uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
+        with:
+          draft: false
+          makeLatest: true
+          name: ${{ steps.semver.outputs.next }}
+          token: ${{ github.token }}
