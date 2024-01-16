@@ -5,11 +5,12 @@ name: Auto Releaser
 
 on:
   schedule:
-    - cron: '0 10 * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 jobs:
   release:
+    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
