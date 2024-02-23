@@ -30,7 +30,7 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - name: Dump context
-        uses: crazy-max/ghaction-dump-context@8b55fa205ab4530d36f787a4de1009afaaa7f3b4 # v2.1.0
+        uses: crazy-max/ghaction-dump-context@fc6f6179f2c41d2ea976b81b79a947393c3a02d9 # v2.2.0
 
       # This first step will fail if there's no metadata and so the approval
       # will not occur.
