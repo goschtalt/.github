@@ -122,7 +122,7 @@ jobs:
       # Upload the results of code coverage once
 
       - name: Send results to codecov.io
-        uses: codecov/codecov-action@ab904c41d6ece82784817410c45d8b8c02684457 # v3.1.6
+        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4.1.0
         with:
           directory:  ${{ inputs.working-directory }}
           flags: unittests
