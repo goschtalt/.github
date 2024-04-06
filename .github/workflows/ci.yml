@@ -118,6 +118,7 @@ jobs:
       - name: goschtalt -- Coverage
         working-directory: ${{ inputs.working-directory }}
         run: |
+          go mod tidy
           go get ./...
           go test -race -covermode=atomic -coverprofile=coverage.out ./...
 
@@ -177,6 +178,11 @@ jobs:
           go-version: ${{ inputs.go-version }}
           cache: true
           cache-dependency-path: ${{ inputs.working-directory }}
+
+      - name: Update go.mod tidy
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          go mod tid
 
       - name: Lint Entire Repo
         if: github.event_name != 'pull_request'
