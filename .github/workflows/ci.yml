@@ -182,7 +182,7 @@ jobs:
       - name: Update go.mod tidy
         working-directory: ${{ inputs.working-directory }}
         run: |
-          go mod tid
+          go mod tidy
 
       - name: Lint Entire Repo
         if: github.event_name != 'pull_request'
