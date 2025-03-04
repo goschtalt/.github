@@ -19,7 +19,7 @@ jobs:
 
       - name: Get Next Version
         id: semver
-        uses: ietf-tools/semver-action@2415a9e79db34eb828a8dc1d20d4890725737227 # v1.8.0
+        uses: ietf-tools/semver-action@d93d5fbbab3c2e2ec76b0d22abac50e8e853fcd2 # v1.10.0
         with:
           token: ${{ github.token }}
           branch: main
