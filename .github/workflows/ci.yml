@@ -224,7 +224,7 @@ jobs:
           cache-dependency-path: ${{ inputs.working-directory }}
 
       # setup ruby environment before running jonabc/setup-licensed
-      - uses: ruby/setup-ruby@f2f42b7848feff522ffa488a5236ba0a73bccbdd # v1.219.0
+      - uses: ruby/setup-ruby@277ba2a127aba66d45bad0fa2dc56f80dbfedffa # v1.222.0
         with:
           ruby-version: ruby
 
