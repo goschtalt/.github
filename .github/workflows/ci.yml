@@ -186,7 +186,7 @@ jobs:
 
       - name: Lint Entire Repo
         if: github.event_name != 'pull_request'
-        uses: golangci/golangci-lint-action@55c2c1448f86e01eaae002a5a3a9624417608d84 # v3.7.1
+        uses: golangci/golangci-lint-action@1481404843c368bc19ca9406f87d6e0fc97bdcfd # v3.7.1
         with:
           working-directory: ${{ inputs.working-directory }}
           version:           ${{ inputs.linter-version }}
