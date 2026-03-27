@@ -27,7 +27,7 @@ jobs:
         uses: crazy-max/ghaction-dump-context@5355a8e5e6ac5a302e746a1c4b7747a0393863c8 # v2.3.0
 
       - name: Checkout repository
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@38697555549f1db7851b81482ff19f1fa5c4fedc # v4.34.1
